@@ -23,31 +23,31 @@ def show_dashboard():
     metrics = data.get('metrics', {})
 
     # Modern metric cards
-    st.markdown("""
+    st.markdown(f"""
     <style>
-    .metric-row {
+    .metric-row {{
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
         gap: 1rem;
         margin-bottom: 2rem;
-    }
-    .metric-card {
+    }}
+    .metric-card {{
         background: white;
         padding: 1.5rem;
         border-radius: 15px;
         box-shadow: 0 2px 12px rgba(0,0,0,0.1);
         text-align: center;
-    }
-    .metric-value {
+    }}
+    .metric-value {{
         font-size: 1.8rem;
         font-weight: bold;
         color: #ff4b4b;
         margin: 0.5rem 0;
-    }
-    .metric-label {
+    }}
+    .metric-label {{
         color: #666;
         font-size: 0.9rem;
-    }
+    }}
     </style>
 
     <div class="metric-row">
