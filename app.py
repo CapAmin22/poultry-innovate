@@ -11,13 +11,25 @@ st.set_page_config(
 # Modern mobile-first CSS
 st.markdown("""
 <style>
-    /* Modern Card Styling */
+    /* Global Styling */
     .stApp {
-        background-color: #f8f9fa;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     }
 
     .css-1d391kg {
-        padding-top: 1rem;
+        padding-top: 1.5rem;
+    }
+
+    /* Typography Improvements */
+    h1, h2, h3 {
+        color: #1a1a1a;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        letter-spacing: -0.5px;
+    }
+
+    p {
+        color: #444;
+        line-height: 1.6;
     }
 
     /* Bottom Navigation */
@@ -26,43 +38,84 @@ st.markdown("""
         bottom: 0;
         left: 0;
         right: 0;
-        background: white;
-        box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
         z-index: 999;
-        padding: 0.5rem;
+        padding: 0.8rem;
+        border-top: 1px solid rgba(0,0,0,0.05);
     }
 
     .stButton>button {
         background: none;
         border: none;
-        color: #555;
-        font-size: 0.8rem;
-        padding: 0.5rem;
-        border-radius: 50%;
+        color: #666;
+        font-size: 0.85rem;
+        padding: 0.6rem;
+        border-radius: 12px;
         aspect-ratio: 1;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        transition: all 0.3s;
+        transition: all 0.2s ease;
+        font-weight: 500;
     }
 
     .stButton>button:hover {
         color: #ff4b4b;
-        background: none;
+        background: rgba(255,75,75,0.1);
+        transform: translateY(-2px);
     }
 
     .stButton>button[data-active="true"] {
         color: #ff4b4b;
+        background: rgba(255,75,75,0.1);
     }
 
     /* Card Styling */
     .modern-card {
         background: white;
-        padding: 1.5rem;
-        border-radius: 15px;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.1);
-        margin-bottom: 1rem;
+        padding: 1.8rem;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        margin-bottom: 1.2rem;
+        border: 1px solid rgba(0,0,0,0.08);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .modern-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 25px rgba(0,0,0,0.1);
+    }
+
+    /* Input Fields */
+    .stTextInput input, .stSelectbox select {
+        border-radius: 8px;
+        border: 1px solid rgba(0,0,0,0.1);
+        padding: 0.5rem 1rem;
+        transition: all 0.2s ease;
+    }
+
+    .stTextInput input:focus, .stSelectbox select:focus {
+        border-color: #ff4b4b;
+        box-shadow: 0 0 0 2px rgba(255,75,75,0.2);
+    }
+
+    /* DataFrames and Tables */
+    .dataframe {
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid rgba(0,0,0,0.1);
+    }
+
+    .dataframe th {
+        background: #f8f9fa;
+        padding: 0.75rem 1rem;
+    }
+
+    .dataframe td {
+        padding: 0.75rem 1rem;
     }
 
     /* Hide default elements */
