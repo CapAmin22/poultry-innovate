@@ -8,8 +8,9 @@ class DataGovClient:
     BASE_URL = "https://api.data.gov.in/resource"
 
     def __init__(self):
-        self.api_key = st.secrets.get("DATA_GOV_API_KEY", "")
-        self.resource_id = st.secrets.get("DATA_GOV_RESOURCE_ID", "")
+        self.api_key = st.secrets["DATA_GOV_API_KEY"]
+        self.resource_id = st.secrets["DATA_GOV_RESOURCE_ID"]
+        self.base_url = "https://api.data.gov.in/resource"
 
     def get_poultry_stats(self, limit: int = 100, offset: int = 0) -> Optional[Dict[str, Any]]:
         """
