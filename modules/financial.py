@@ -18,7 +18,7 @@ def get_market_data() -> dict:
             pass
         
         # Use dummy data
-        return {
+    return {
             "commodities": market_data.get("commodities", {
                 "corn": 7.25,
                 "soybean": 14.50,
@@ -61,11 +61,11 @@ def generate_trend_data(base_price: float, days: int = 30) -> pd.DataFrame:
 def display_market_summary():
     """Display key market metrics in the dashboard."""
     try:
-        market_data = get_market_data()
+    market_data = get_market_data()
         if not market_data:
             st.warning("Market data temporarily unavailable")
             return
-            
+    
         col1, col2, col3 = st.columns(3)
         
         with col1:
@@ -74,14 +74,14 @@ def display_market_summary():
                 f"${sum(market_data['commodities'].values()) / len(market_data['commodities']):.2f}",
                 "2.1%"
             )
-        
+            
         with col2:
             st.metric(
                 "Broiler Price",
                 f"${market_data['poultry']['broiler']:.2f}",
                 "-0.5%"
             )
-        
+            
         with col3:
             st.metric(
                 "Egg Price",

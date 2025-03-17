@@ -313,11 +313,11 @@ def main() -> None:
     """
     try:
         # Add logo and header with improved styling
-        with st.container():
-            col1, col2 = st.columns([1, 5])
-            with col1:
+    with st.container():
+        col1, col2 = st.columns([1, 5])
+        with col1:
                 st.image("assets/22poultry-logo.png", width=100)
-            with col2:
+        with col2:
                 st.markdown("""
                     <h1 style='margin-top: 0.5rem; margin-bottom: 0.5rem; color: #ffffff;'>
                         22Poultry
@@ -327,26 +327,26 @@ def main() -> None:
                     </p>
                 """, unsafe_allow_html=True)
 
-        # Initialize session state
-        if 'user_location' not in st.session_state:
-            st.session_state.user_location = None
-        if 'notifications' not in st.session_state:
-            st.session_state.notifications = []
+    # Initialize session state
+    if 'user_location' not in st.session_state:
+        st.session_state.user_location = None
+    if 'notifications' not in st.session_state:
+        st.session_state.notifications = []
 
         # Main navigation
-        selected = option_menu(
-            menu_title=None,
+    selected = option_menu(
+        menu_title=None,
             options=["Dashboard", "Weather", "Education", "Collaboration", "News"],
             icons=["speedometer2", "cloud-sun", "book", "people", "newspaper"],
-            default_index=0,
-            orientation="horizontal",
-            styles={
+        default_index=0,
+        orientation="horizontal",
+        styles={
                 "container": {"padding": "0!important", "background-color": "transparent"},
                 "icon": {"font-size": "1rem"}, 
-                "nav-link": {
+            "nav-link": {
                     "font-size": "0.9rem",
-                    "text-align": "center",
-                    "margin": "0px",
+                "text-align": "center",
+                "margin": "0px",
                     "--hover-color": "rgba(0, 255, 135, 0.2)",
                 },
                 "nav-link-selected": {
@@ -381,16 +381,16 @@ def display_dashboard() -> None:
         st.markdown("""
             <div style='margin-bottom: 2rem;'>
                 <h2 style='color: #ffffff; margin-bottom: 1rem;'>Dashboard Overview</h2>
-            </div>
-        """, unsafe_allow_html=True)
-        
+                </div>
+                """, unsafe_allow_html=True)
+
         # Weather and Market Summary
         col1, col2 = st.columns(2)
         
         with col1:
-            st.markdown("""
+                st.markdown("""
                 <h3 style='color: #ffffff; margin-bottom: 1rem;'>Weather Summary</h3>
-            """, unsafe_allow_html=True)
+                """, unsafe_allow_html=True)
             weather.display_weather_widget()
             
             st.markdown("""
@@ -490,8 +490,8 @@ def display_notifications() -> None:
                         <div class="notification">
                             <strong>{notification['title']}</strong><br>
                             {notification['message']}
-                        </div>
-                    """, unsafe_allow_html=True)
+    </div>
+    """, unsafe_allow_html=True)
             else:
                 st.info("No new notifications")
     except Exception as e:
@@ -504,7 +504,7 @@ if __name__ == "__main__":
         if "healthz" in st.query_params:
             st.success("Health check passed")
         else:
-            main()
+    main()
     except Exception as e:
         logger.critical(f"Application failed to start: {str(e)}")
         st.error("Critical error: Unable to start the application. Please contact support.")
