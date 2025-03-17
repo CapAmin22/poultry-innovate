@@ -129,14 +129,14 @@ poultry-innovate/
 ├── modules/              # Application modules
 │   ├── __init__.py
 │   ├── weather.py
-│   ├── health.py
+│   ├── news.py
 │   ├── financial.py
+│   ├── health.py
 │   ├── education.py
-│   ├── stakeholders.py
-│   └── news.py
-├── data/                 # Data storage
-├── logs/                 # Application logs
-└── tests/               # Unit tests
+│   └── stakeholders.py
+└── static/              # Static assets
+    ├── css/
+    └── images/
 ```
 
 ## Configuration
@@ -184,4 +184,4 @@ For support, please open an issue in the GitHub repository.
 
 ## Authors
 
-- Your Name - Initial work - [YourGitHub](https://github.com/yourusername) 
+- Your Name - Initial work - [YourGitHub](https://github.com/yourusername)
