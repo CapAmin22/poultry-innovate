@@ -21,6 +21,14 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 logger.info("Application starting up")
 
+# Try to import logo component with fallback
+try:
+    from streamlit_extras.app_logo import add_logo
+    HAS_LOGO_COMPONENT = True
+except ImportError:
+    logger.warning("Could not import logo component, will use text header instead")
+    HAS_LOGO_COMPONENT = False
+
 # Initialize configuration from Streamlit secrets
 def get_secret(key, default=None):
     """Safely get a secret from Streamlit secrets."""
@@ -296,14 +304,18 @@ def main() -> None:
     Manages the main layout, navigation, and different sections of the application.
     """
     try:
-        # Add logo with enhanced styling
+        # Add logo or header
         with st.container():
             col1, col2 = st.columns([1, 5])
             with col1:
-                try:
-                    add_logo("generated-icon.png", height=80)
-                except Exception as e:
-                    logger.warning(f"Could not load logo: {e}")
+                if HAS_LOGO_COMPONENT:
+                    try:
+                        add_logo("generated-icon.png", height=80)
+                    except Exception as e:
+                        logger.warning(f"Could not load logo: {e}")
+                        st.markdown("🐔")
+                else:
+                    st.markdown("🐔")
             with col2:
                 st.markdown("<h1 style='margin-top: 0.5rem;'>PoultryInnovate</h1>", unsafe_allow_html=True)
 
