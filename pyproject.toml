@@ -1,13 +1,43 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
 [project]
-name = "repl-nix-workspace"
+name = "poultry-innovate"
 version = "0.1.0"
-description = "Add your description here"
-requires-python = ">=3.11"
-dependencies = [
-    "modules>=1.0.0",
-    "numpy>=2.2.4",
-    "pandas>=2.2.3",
-    "plotly>=6.0.0",
-    "requests>=2.32.3",
-    "streamlit>=1.43.2",
+authors = [
+    { name = "Your Name", email = "your.email@example.com" }
 ]
+description = "A comprehensive platform for modern poultry farming management"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "streamlit==1.32.0",
+    "pandas==2.2.0",
+    "numpy==1.26.0",
+    "plotly==5.18.0",
+    "requests==2.31.0",
+    "scikit-learn==1.4.0",
+    "pillow==10.2.0",
+    "streamlit-option-menu==0.3.12",
+    "streamlit-extras==0.4.0",
+    "streamlit-lottie==0.0.5",
+    "python-dateutil==2.9.0",
+    "pytz==2025.1",
+    "markdownlit==0.0.7",
+    "htbuilder==0.9.0",
+    "st-annotated-text==4.0.2",
+    "streamlit-faker==0.0.3",
+    "streamlit-card==1.0.2",
+    "streamlit-vertical-slider==2.5.5",
+    "watchdog==3.0.0"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/yourusername/poultry-innovate"
+"Bug Tracker" = "https://github.com/yourusername/poultry-innovate/issues" 

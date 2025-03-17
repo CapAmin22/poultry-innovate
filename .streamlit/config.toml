@@ -1,4 +1,31 @@
+[theme]
+primaryColor = "#2563eb"
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#f8f9fa"
+textColor = "#1e293b"
+font = "sans-serif"
+
 [server]
-headless = true
+port = 8501
 address = "0.0.0.0"
-port = 5000
+maxUploadSize = 200
+enableXsrfProtection = true
+enableCORS = false
+maxMessageSize = 200
+
+[browser]
+serverAddress = "0.0.0.0"
+gatherUsageStats = false
+
+[logger]
+level = "info"
+messageFormat = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+[runner]
+magicEnabled = true
+installTracer = true
+fixMatplotlib = true
+
+[client]
+showErrorDetails = false
+toolbarMode = "minimal"
