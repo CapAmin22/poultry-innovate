@@ -312,20 +312,20 @@ def main() -> None:
     Manages the main layout, navigation, and different sections of the application.
     """
     try:
-        # Add logo and header with improved styling
+        # Add logo or header
     with st.container():
         col1, col2 = st.columns([1, 5])
         with col1:
-                st.image("assets/22poultry-logo.png", width=100)
+                if HAS_LOGO_COMPONENT:
+                    try:
+            add_logo("generated-icon.png", height=80)
+                    except Exception as e:
+                        logger.warning(f"Could not load logo: {e}")
+                        st.markdown("🐔")
+                else:
+                    st.markdown("🐔")
         with col2:
-                st.markdown("""
-                    <h1 style='margin-top: 0.5rem; margin-bottom: 0.5rem; color: #ffffff;'>
-                        22Poultry
-                    </h1>
-                    <p style='margin: 0; color: rgba(255,255,255,0.8); font-size: 1.1rem;'>
-                        Smart Farming Platform
-                    </p>
-                """, unsafe_allow_html=True)
+                st.markdown("<h1 style='margin-top: 0.5rem;'>22Poultry</h1>", unsafe_allow_html=True)
 
     # Initialize session state
     if 'user_location' not in st.session_state:
@@ -358,7 +358,7 @@ def main() -> None:
         )
 
         # Handle navigation selection
-        if selected == "Dashboard":
+    if selected == "Dashboard":
             display_dashboard()
         elif selected == "Weather":
             weather.show_weather_module()
@@ -378,39 +378,29 @@ def display_dashboard() -> None:
     Display the main dashboard with integrated market analysis.
     """
     try:
-        st.markdown("""
-            <div style='margin-bottom: 2rem;'>
-                <h2 style='color: #ffffff; margin-bottom: 1rem;'>Dashboard Overview</h2>
-                </div>
-                """, unsafe_allow_html=True)
-
+        st.markdown("## Dashboard Overview")
+        
         # Weather and Market Summary
         col1, col2 = st.columns(2)
         
         with col1:
-                st.markdown("""
-                <h3 style='color: #ffffff; margin-bottom: 1rem;'>Weather Summary</h3>
-                """, unsafe_allow_html=True)
+            st.markdown("### Weather Summary")
             weather.display_weather_widget()
             
-            st.markdown("""
-                <h3 style='color: #ffffff; margin: 1.5rem 0 1rem;'>Recent Updates</h3>
-            """, unsafe_allow_html=True)
+            st.markdown("### Recent Updates")
             collaboration.init_session_state()
             recent_posts = st.session_state.posts[:2]
             for post in recent_posts:
                 collaboration.show_post(post)
         
         with col2:
-            st.markdown("""
-                <h3 style='color: #ffffff; margin-bottom: 1rem;'>Market Overview</h3>
-            """, unsafe_allow_html=True)
+            st.markdown("### Market Overview")
             financial.display_market_summary()
             
-            st.markdown("""
-                <h3 style='color: #ffffff; margin: 1.5rem 0 1rem;'>Market Analysis</h3>
-            """, unsafe_allow_html=True)
+            # Market Trends Section
+            st.markdown("### Market Analysis")
             
+            # Create tabs for market analysis
             market_tab1, market_tab2 = st.tabs(["Commodity Prices", "Poultry Prices"])
             
             with market_tab1:
@@ -419,34 +409,8 @@ def display_dashboard() -> None:
             with market_tab2:
                 financial.show_poultry_prices()
         
-        # Market Insights section with improved styling
-        st.markdown("""
-            <div style='margin: 2rem 0 1.5rem;'>
-                <h3 style='color: #ffffff; margin-bottom: 1.5rem;'>Market Insights & Trends</h3>
-            </div>
-        """, unsafe_allow_html=True)
-        
-        # Custom CSS for metrics
-        st.markdown("""
-            <style>
-            [data-testid="stMetricValue"] {
-                background: linear-gradient(120deg, #00ff87, #60efff);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                font-size: 2rem !important;
-            }
-            [data-testid="stMetricLabel"] {
-                color: #ffffff !important;
-                font-size: 1.2rem !important;
-                font-weight: 600 !important;
-            }
-            [data-testid="stMetricDelta"] {
-                color: #00ff87 !important;
-                font-size: 1rem !important;
-            }
-            </style>
-        """, unsafe_allow_html=True)
-        
+        # Bottom section for additional insights
+        st.markdown("### Market Insights & Trends")
         col3, col4, col5 = st.columns(3)
         
         with col3:
@@ -473,6 +437,7 @@ def display_dashboard() -> None:
                 help="Current demand trend in the market"
             )
             
+        # Display notifications
         display_notifications()
             
     except Exception as e:

@@ -5,7 +5,6 @@ import plotly.express as px
 import plotly.graph_objects as go
 from datetime import datetime, timedelta
 import logging
-import pytz
 
 logger = logging.getLogger(__name__)
 
@@ -15,277 +14,67 @@ def kelvin_to_celsius(kelvin):
 def get_weather_icon(icon_code):
     return f"https://openweathermap.org/img/wn/{icon_code}@2x.png"
 
-def get_weather_data(city: str = None) -> dict:
-    """
-    Fetch weather data from OpenWeather API with proper error handling.
-    """
+def get_weather_data(lat: float = 0, lon: float = 0) -> dict:
+    """Fetch weather data from OpenWeather API with error handling."""
     try:
-        if not city:
-            city = st.secrets.weather.get("default_city", "Manila")
+        api_key = st.secrets["openweather_api_key"]
+        url = f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={api_key}&units=metric"
         
-        api_key = st.secrets.openweather_api_key
-        base_url = f"{st.secrets.api_urls.weather}/weather"
-        
-        params = {
-            "q": city,
-            "appid": api_key,
-            "units": st.secrets.weather.get("units", "metric")
-        }
-        
-        response = requests.get(base_url, params=params)
+        response = requests.get(url, timeout=10)
         response.raise_for_status()
-        
         return response.json()
-    except requests.exceptions.RequestException as e:
-        logger.error(f"Error fetching weather data: {str(e)}")
-        return None
-    except Exception as e:
-        logger.error(f"Unexpected error in weather data fetch: {str(e)}")
-        return None
+    except KeyError:
+        logger.error("OpenWeather API key not found in secrets")
+        return {"error": "API key not configured"}
+    except requests.RequestException as e:
+        logger.error(f"Weather API request failed: {str(e)}")
+        return {"error": "Weather service temporarily unavailable"}
 
 def display_weather_widget():
-    """Display weather information in a modern card format."""
+    """Display weather information with error handling."""
     try:
-        # Get user's location or use default
-        city = st.session_state.get('user_location', st.secrets.weather.get("default_city", "Manila"))
+        # Default coordinates (can be updated based on user location)
+        weather_data = get_weather_data(14.5995, 120.9842)  # Manila coordinates
         
-        # Location input
-        new_city = st.text_input("Enter location:", value=city, key="weather_location")
-        if new_city != city:
-            st.session_state.user_location = new_city
-            st.rerun()
-        
-        weather_data = get_weather_data(new_city)
-        
-        if weather_data:
-            # Convert timestamp to local time
-            timestamp = datetime.fromtimestamp(weather_data["dt"])
-            ph_tz = pytz.timezone("Asia/Manila")
-            local_time = timestamp.astimezone(ph_tz)
+        if "error" in weather_data:
+            st.warning(weather_data["error"])
+            return
             
-            # Display weather information
-            st.markdown(f"""
-            <div class="modern-card" style="padding: 1.5rem;">
-                <div style="display: flex; align-items: center; justify-content: space-between;">
-                    <div>
-                        <h4 style="margin: 0; color: #ffffff;">{weather_data["name"]}</h4>
-                        <p style="margin: 0; color: rgba(255,255,255,0.7);">
-                            {local_time.strftime("%I:%M %p, %B %d")}
-                        </p>
-                    </div>
-                    <div style="text-align: right;">
-                        <h2 style="margin: 0; color: #ffffff;">
-                            {weather_data["main"]["temp"]}°C
-                        </h2>
-                        <p style="margin: 0; color: rgba(255,255,255,0.7);">
-                            {weather_data["weather"][0]["description"].title()}
-                        </p>
-                    </div>
-                </div>
-                
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1.5rem;">
-                    <div>
-                        <p style="margin: 0; color: rgba(255,255,255,0.7);">Humidity</p>
-                        <p style="margin: 0; color: #ffffff; font-size: 1.1rem;">
-                            {weather_data["main"]["humidity"]}%
-                        </p>
-                    </div>
-                    <div>
-                        <p style="margin: 0; color: rgba(255,255,255,0.7);">Wind</p>
-                        <p style="margin: 0; color: #ffffff; font-size: 1.1rem;">
-                            {weather_data["wind"]["speed"]} m/s
-                        </p>
-                    </div>
-                    <div>
-                        <p style="margin: 0; color: rgba(255,255,255,0.7);">Pressure</p>
-                        <p style="margin: 0; color: #ffffff; font-size: 1.1rem;">
-                            {weather_data["main"]["pressure"]} hPa
-                        </p>
-                    </div>
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-        else:
-            st.error("Unable to fetch weather data. Please check your location and try again.")
+        temp = weather_data.get("main", {}).get("temp", "N/A")
+        humidity = weather_data.get("main", {}).get("humidity", "N/A")
+        description = weather_data.get("weather", [{}])[0].get("description", "N/A").capitalize()
+        
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.metric("Temperature", f"{temp}°C")
+        with col2:
+            st.metric("Humidity", f"{humidity}%")
+        with col3:
+            st.metric("Conditions", description)
             
     except Exception as e:
         logger.error(f"Error displaying weather widget: {str(e)}")
-        st.error("Error displaying weather information. Please try again later.")
+        st.warning("Weather information temporarily unavailable")
 
 def show_weather_module():
     """Main weather module display."""
-    st.markdown("## Weather Information")
+    st.markdown("## Weather Monitoring")
     
     try:
-        # Main weather display
+        # Location selector (can be enhanced with geocoding)
+        st.selectbox("Select Location", ["Manila", "Cebu", "Davao"], key="weather_location")
+        
+        # Current conditions
+        st.markdown("### Current Conditions")
         display_weather_widget()
         
-        # Additional weather information
-        if st.session_state.get('user_location'):
-            weather_data = get_weather_data(st.session_state.user_location)
-            if weather_data:
-                st.markdown("### Detailed Weather Analysis")
-                
-                col1, col2 = st.columns(2)
-                
-                with col1:
-                    st.markdown("""
-                    <div class="modern-card" style="padding: 1.5rem;">
-                        <h4 style="margin: 0 0 1rem 0; color: #ffffff;">Temperature Range</h4>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <p style="margin: 0; color: rgba(255,255,255,0.7);">Min</p>
-                                <p style="margin: 0; color: #ffffff; font-size: 1.2rem;">
-                                    {:.1f}°C
-                                </p>
-                            </div>
-                            <div>
-                                <p style="margin: 0; color: rgba(255,255,255,0.7);">Max</p>
-                                <p style="margin: 0; color: #ffffff; font-size: 1.2rem;">
-                                    {:.1f}°C
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    """.format(
-                        weather_data["main"]["temp_min"],
-                        weather_data["main"]["temp_max"]
-                    ), unsafe_allow_html=True)
-                
-                with col2:
-                    st.markdown("""
-                    <div class="modern-card" style="padding: 1.5rem;">
-                        <h4 style="margin: 0 0 1rem 0; color: #ffffff;">Visibility & Clouds</h4>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <p style="margin: 0; color: rgba(255,255,255,0.7);">Visibility</p>
-                                <p style="margin: 0; color: #ffffff; font-size: 1.2rem;">
-                                    {} km
-                                </p>
-                            </div>
-                            <div>
-                                <p style="margin: 0; color: rgba(255,255,255,0.7);">Cloud Cover</p>
-                                <p style="margin: 0; color: #ffffff; font-size: 1.2rem;">
-                                    {}%
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    """.format(
-                        weather_data["visibility"] / 1000,
-                        weather_data["clouds"]["all"]
-                    ), unsafe_allow_html=True)
-                
-                # Weather Impact Analysis
-                st.markdown("### Weather Impact Analysis")
-                
-                impact_analysis = analyze_weather_impact(weather_data)
-                
-                for category, details in impact_analysis.items():
-                    st.markdown(f"""
-                    <div class="modern-card" style="padding: 1.5rem; margin-bottom: 1rem;">
-                        <h4 style="margin: 0 0 0.5rem 0; color: #ffffff;">{category}</h4>
-                        <p style="margin: 0; color: rgba(255,255,255,0.9);">{details["description"]}</p>
-                        <div style="margin-top: 0.5rem;">
-                            <span style="color: {details['color']};">Impact Level: {details['impact']}</span>
-                        </div>
-                    </div>
-                    """, unsafe_allow_html=True)
-    
+        # Forecast section
+        st.markdown("### 5-Day Forecast")
+        st.info("Forecast feature coming soon!")
+        
     except Exception as e:
         logger.error(f"Error in weather module: {str(e)}")
-        st.error("Error loading weather module. Please try again later.")
-
-def analyze_weather_impact(weather_data: dict) -> dict:
-    """Analyze weather data and provide impact assessment for farming operations."""
-    try:
-        temp = weather_data["main"]["temp"]
-        humidity = weather_data["main"]["humidity"]
-        wind_speed = weather_data["wind"]["speed"]
-        
-        analysis = {
-            "Poultry Health": {
-                "description": "",
-                "impact": "",
-                "color": ""
-            },
-            "Feed Management": {
-                "description": "",
-                "impact": "",
-                "color": ""
-            },
-            "Facility Operations": {
-                "description": "",
-                "impact": "",
-                "color": ""
-            }
-        }
-        
-        # Analyze temperature impact
-        if 18 <= temp <= 26:
-            analysis["Poultry Health"].update({
-                "description": "Optimal temperature range for poultry. Good conditions for growth and production.",
-                "impact": "Low",
-                "color": "#00ff87"
-            })
-        elif temp < 18:
-            analysis["Poultry Health"].update({
-                "description": "Temperature below optimal range. Consider additional heating.",
-                "impact": "Moderate",
-                "color": "#ffaa00"
-            })
-        else:
-            analysis["Poultry Health"].update({
-                "description": "High temperature alert. Implement cooling measures.",
-                "impact": "High",
-                "color": "#ff4444"
-            })
-        
-        # Analyze humidity impact
-        if 40 <= humidity <= 60:
-            analysis["Facility Operations"].update({
-                "description": "Optimal humidity range. Maintain current ventilation settings.",
-                "impact": "Low",
-                "color": "#00ff87"
-            })
-        elif humidity < 40:
-            analysis["Facility Operations"].update({
-                "description": "Low humidity. Consider using humidifiers or misting systems.",
-                "impact": "Moderate",
-                "color": "#ffaa00"
-            })
-        else:
-            analysis["Facility Operations"].update({
-                "description": "High humidity. Increase ventilation to prevent moisture-related issues.",
-                "impact": "High",
-                "color": "#ff4444"
-            })
-        
-        # Analyze wind impact on feed management
-        if wind_speed < 5:
-            analysis["Feed Management"].update({
-                "description": "Calm conditions. Optimal for outdoor feeding operations.",
-                "impact": "Low",
-                "color": "#00ff87"
-            })
-        elif 5 <= wind_speed <= 10:
-            analysis["Feed Management"].update({
-                "description": "Moderate wind. Monitor outdoor feeding areas.",
-                "impact": "Moderate",
-                "color": "#ffaa00"
-            })
-        else:
-            analysis["Feed Management"].update({
-                "description": "Strong winds. Consider moving feeding operations indoors.",
-                "impact": "High",
-                "color": "#ff4444"
-            })
-        
-        return analysis
-        
-    except Exception as e:
-        logger.error(f"Error in weather impact analysis: {str(e)}")
-        return {}
+        st.error("Unable to load weather module. Please try again later.")
 
 def show_forecast(location=None):
     if not location:
