@@ -1,5 +1,5 @@
 import streamlit as st
-from modules import weather, news, statistics, education, financial, stakeholders, health
+from modules import weather, news, statistics, education, financial, stakeholders, health, collaboration
 import os
 from streamlit_option_menu import option_menu
 from streamlit_extras.app_logo import add_logo
@@ -345,29 +345,27 @@ def main() -> None:
             st.session_state.notifications = []
             logger.info("Initialized notifications in session state")
 
-        # Modern Navigation
+        # Main navigation
         try:
             selected = option_menu(
                 menu_title=None,
-                options=["Dashboard", "Health", "Weather", "Market", "Education", "Network", "News"],
-                icons=["graph-up", "heart-pulse", "cloud-sun", "currency-dollar", "book", "people", "newspaper"],
-                menu_icon="cast",
+                options=["Dashboard", "Weather", "Market", "Education", "Collaboration", "News"],
+                icons=["speedometer2", "cloud-sun", "currency-dollar", "book", "people", "newspaper"],
                 default_index=0,
                 orientation="horizontal",
                 styles={
-                    "container": {
-                        "padding": "0.5rem",
-                        "background-color": "transparent",
-                        "border-radius": "15px",
-                        "margin-bottom": "2rem"
-                    },
-                    "icon": {"color": "#2563eb", "font-size": "1.1rem"},
+                    "container": {"padding": "0!important", "background-color": "transparent"},
+                    "icon": {"font-size": "1rem"}, 
                     "nav-link": {
-                        "font-size": "1rem",
+                        "font-size": "0.9rem",
                         "text-align": "center",
-                        "padding": "1rem",
                         "margin": "0px",
-                        "--hover-color": "#eee",
+                        "--hover-color": "rgba(0, 255, 135, 0.2)",
+                    },
+                    "nav-link-selected": {
+                        "background": "linear-gradient(120deg, #00ff87, #60efff)",
+                        "color": "#1a1c2b",
+                        "font-weight": "600",
                     },
                 }
             )
@@ -379,16 +377,14 @@ def main() -> None:
         try:
             if selected == "Dashboard":
                 display_dashboard()
-            elif selected == "Health":
-                health.show_health_module()
             elif selected == "Weather":
                 weather.show_weather_module()
             elif selected == "Market":
                 financial.show_market_module()
             elif selected == "Education":
                 education.show_education_module()
-            elif selected == "Network":
-                stakeholders.show_network_module()
+            elif selected == "Collaboration":
+                collaboration.show_collaboration_module()
             elif selected == "News":
                 news.show_news_module()
         except Exception as e:
@@ -428,13 +424,6 @@ def display_dashboard() -> None:
         
         with col2:
             try:
-                display_health_metrics()
-            except Exception as e:
-                logger.error(f"Error in health metrics: {e}")
-                st.warning("Health metrics temporarily unavailable")
-        
-        with col3:
-            try:
                 display_market_trends()
             except Exception as e:
                 logger.error(f"Error in market trends: {e}")
@@ -460,16 +449,6 @@ def display_weather_summary() -> None:
     except Exception as e:
         logger.error(f"Error displaying weather summary: {str(e)}")
         st.warning("Weather information temporarily unavailable")
-
-def display_health_metrics() -> None:
-    """Display key health metrics and alerts for the poultry farm."""
-    try:
-        with st.container():
-            st.markdown("### Health Metrics")
-            health.display_health_summary()
-    except Exception as e:
-        logger.error(f"Error displaying health metrics: {str(e)}")
-        st.warning("Health metrics temporarily unavailable")
 
 def display_market_trends() -> None:
     """Display current market trends and financial indicators."""
