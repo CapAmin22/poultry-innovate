@@ -313,65 +313,61 @@ def main() -> None:
     """
     try:
         # Add logo or header
-    with st.container():
-        col1, col2 = st.columns([1, 5])
-        with col1:
+        with st.container():
+            col1, col2 = st.columns([1, 5])
+            with col1:
                 if HAS_LOGO_COMPONENT:
                     try:
-            add_logo("generated-icon.png", height=80)
+                        add_logo("generated-icon.png", height=80)
                     except Exception as e:
                         logger.warning(f"Could not load logo: {e}")
                         st.markdown("🐔")
                 else:
                     st.markdown("🐔")
-        with col2:
+            with col2:
                 st.markdown("<h1 style='margin-top: 0.5rem;'>22Poultry</h1>", unsafe_allow_html=True)
 
-    # Initialize session state
-    if 'user_location' not in st.session_state:
-        st.session_state.user_location = None
-    if 'notifications' not in st.session_state:
-        st.session_state.notifications = []
-
-        # Main navigation
-    selected = option_menu(
-        menu_title=None,
-            options=["Dashboard", "Weather", "Education", "Collaboration", "News"],
-            icons=["speedometer2", "cloud-sun", "book", "people", "newspaper"],
-        default_index=0,
-        orientation="horizontal",
-        styles={
+        # Initialize session state
+        if 'notifications' not in st.session_state:
+            st.session_state.notifications = []
+            
+        # Display any pending notifications
+        display_notifications()
+        
+        # Navigation menu
+        selected = option_menu(
+            menu_title=None,
+            options=["Dashboard", "Weather", "News", "Collaboration"],
+            icons=["house", "cloud-sun", "newspaper", "people"],
+            menu_icon="cast",
+            default_index=0,
+            orientation="horizontal",
+            styles={
                 "container": {"padding": "0!important", "background-color": "transparent"},
-                "icon": {"font-size": "1rem"}, 
-            "nav-link": {
-                    "font-size": "0.9rem",
-                "text-align": "center",
-                "margin": "0px",
-                    "--hover-color": "rgba(0, 255, 135, 0.2)",
+                "icon": {"color": "white", "font-size": "14px"},
+                "nav-link": {
+                    "text-align": "left",
+                    "margin": "0px",
+                    "padding": "10px",
+                    "--hover-color": "rgba(255, 255, 255, 0.1)",
                 },
-                "nav-link-selected": {
-                    "background": "linear-gradient(120deg, #00ff87, #60efff)",
-                    "color": "#1a1c2b",
-                    "font-weight": "600",
-                },
+                "nav-link-selected": {"background-color": "rgba(255, 255, 255, 0.2)"},
             }
         )
-
-        # Handle navigation selection
-    if selected == "Dashboard":
+        
+        # Display selected section
+        if selected == "Dashboard":
             display_dashboard()
         elif selected == "Weather":
-            weather.show_weather_module()
-        elif selected == "Education":
-            education.show_education_module()
+            weather.show_weather()
+        elif selected == "News":
+            news.show_news()
         elif selected == "Collaboration":
             collaboration.show_collaboration_module()
-        elif selected == "News":
-            news.show_news_module()
-
+            
     except Exception as e:
-        logger.error(f"Critical error in main application: {str(e)}")
-        st.error("An unexpected error occurred. Please refresh the page or contact support.")
+        logger.error(f"Error in main application: {e}")
+        st.error("An error occurred while loading the application. Please try refreshing the page.")
 
 def display_dashboard() -> None:
     """
@@ -455,8 +451,8 @@ def display_notifications() -> None:
                         <div class="notification">
                             <strong>{notification['title']}</strong><br>
                             {notification['message']}
-    </div>
-    """, unsafe_allow_html=True)
+                        </div>
+                    """, unsafe_allow_html=True)
             else:
                 st.info("No new notifications")
     except Exception as e:
@@ -469,7 +465,7 @@ if __name__ == "__main__":
         if "healthz" in st.query_params:
             st.success("Health check passed")
         else:
-    main()
+            main()
     except Exception as e:
         logger.critical(f"Application failed to start: {str(e)}")
         st.error("Critical error: Unable to start the application. Please contact support.")
