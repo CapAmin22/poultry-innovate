@@ -6,87 +6,110 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-def get_news_data(query: str = "poultry farming") -> dict:
-    """Fetch news data from News API with error handling."""
+def get_news_data(query: str = "poultry farming", days: int = 7) -> list:
+    """
+    Fetch news data from News API with proper error handling.
+    """
     try:
-        api_key = st.secrets["news_api_key"]
-        url = "https://newsapi.org/v2/everything"
+        api_key = st.secrets.news_api_key
+        base_url = f"{st.secrets.api_urls.news}/everything"
         
-        # Get news from the last 30 days
-        from_date = (datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')
+        # Calculate date range
+        end_date = datetime.now()
+        start_date = end_date - timedelta(days=days)
         
         params = {
-            'q': query,
-            'apiKey': api_key,
-            'from': from_date,
-            'sortBy': 'publishedAt',
-            'language': 'en'
+            "q": query,
+            "from": start_date.strftime("%Y-%m-%d"),
+            "to": end_date.strftime("%Y-%m-%d"),
+            "sortBy": "relevancy",
+            "language": "en",
+            "apiKey": api_key
         }
         
-        response = requests.get(url, params=params, timeout=10)
+        response = requests.get(base_url, params=params)
         response.raise_for_status()
-        return response.json()
-    except KeyError:
-        logger.error("News API key not found in secrets")
-        return {"error": "API key not configured"}
-    except requests.RequestException as e:
-        logger.error(f"News API request failed: {str(e)}")
-        return {"error": "News service temporarily unavailable"}
+        
+        data = response.json()
+        return data.get("articles", [])
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Error fetching news data: {str(e)}")
+        return []
+    except Exception as e:
+        logger.error(f"Unexpected error in news data fetch: {str(e)}")
+        return []
 
-def display_news_card(article: dict) -> None:
-    """Display a single news article in a card format."""
+def display_news_card(article: dict):
+    """Display a single news article in a modern card format."""
     try:
-        with st.container():
-            st.markdown(f"""
-                <div class="modern-card">
-                    <h3>{article.get('title', 'No title available')}</h3>
-                    <p>{article.get('description', 'No description available')}</p>
-                    <p><small>Published: {article.get('publishedAt', 'Date unknown')[:10]}</small></p>
-                    <a href="{article.get('url', '#')}" target="_blank">Read more</a>
+        # Format the publication date
+        pub_date = datetime.strptime(article["publishedAt"], "%Y-%m-%dT%H:%M:%SZ")
+        formatted_date = pub_date.strftime("%B %d, %Y")
+        
+        st.markdown(f"""
+        <div class="modern-card" style="padding: 1.5rem; margin-bottom: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: start;">
+                <div style="flex: 1;">
+                    <h4 style="margin: 0 0 0.5rem 0; color: #ffffff;">
+                        {article["title"]}
+                    </h4>
+                    <p style="margin: 0 0 1rem 0; color: rgba(255,255,255,0.7);">
+                        {formatted_date} • {article["source"]["name"]}
+                    </p>
+                    <p style="margin: 0; color: rgba(255,255,255,0.9);">
+                        {article["description"]}
+                    </p>
                 </div>
-            """, unsafe_allow_html=True)
+                {f'<img src="{article["urlToImage"]}" style="width: 150px; height: 100px; object-fit: cover; margin-left: 1rem; border-radius: 4px;" alt="News Image"/>' if article.get("urlToImage") else ''}
+            </div>
+            <div style="margin-top: 1rem;">
+                <a href="{article["url"]}" target="_blank" style="color: #00ff87; text-decoration: none;">
+                    Read more →
+                </a>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
     except Exception as e:
         logger.error(f"Error displaying news card: {str(e)}")
-        st.warning("Unable to display this news article")
 
 def show_news_module():
     """Main news module display."""
-    st.markdown("## Poultry Industry News")
+    st.markdown("## Industry News & Updates")
     
     try:
-        # News categories
-        category = st.selectbox(
-            "Select News Category",
-            ["Industry Updates", "Market News", "Health & Disease", "Technology", "Regulations"]
-        )
+        # News filters
+        col1, col2 = st.columns([2, 1])
+        with col1:
+            search_query = st.text_input(
+                "Search news:",
+                value="poultry farming",
+                key="news_search"
+            )
+        with col2:
+            days_filter = st.selectbox(
+                "Time period:",
+                options=[7, 14, 30],
+                format_func=lambda x: f"Last {x} days",
+                key="news_days"
+            )
         
-        # Fetch news based on category
-        search_query = f"poultry farming {category.lower()}"
-        news_data = get_news_data(search_query)
+        # Fetch news articles
+        articles = get_news_data(search_query, days_filter)
         
-        if "error" in news_data:
-            st.warning(news_data["error"])
-            return
+        if articles:
+            # Display articles in modern cards
+            for article in articles:
+                display_news_card(article)
             
-        articles = news_data.get("articles", [])
+            # Add load more button if needed
+            if len(articles) >= 10:
+                st.button("Load More", key="load_more_news")
+        else:
+            st.info("No news articles found. Try adjusting your search criteria.")
         
-        if not articles:
-            st.info("No news articles found for this category.")
-            return
-            
-        # Display news articles
-        for article in articles[:5]:  # Show top 5 articles
-            display_news_card(article)
-            
-        # Add a "Load More" button
-        if len(articles) > 5:
-            if st.button("Load More Articles"):
-                for article in articles[5:10]:
-                    display_news_card(article)
-                    
     except Exception as e:
         logger.error(f"Error in news module: {str(e)}")
-        st.error("Unable to load news module. Please try again later.")
+        st.error("Error loading news module. Please try again later.")
 
 def format_date(date_str):
     date = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%SZ")
