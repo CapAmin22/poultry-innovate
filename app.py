@@ -80,8 +80,8 @@ def load_lottie_url(url: str) -> dict | None:
         return None
 
 # Load animations
-lottie_chicken = load_lottie_url("https://assets5.lottiefiles.com/packages/lf20_GofK09iPAE.json")
-lottie_weather = load_lottie_url("https://assets5.lottiefiles.com/packages/lf20_KUFdS6.json")
+lottie_chicken = load_lottie_url("https://lottie.host/58194a35-654d-4e9d-9d2d-4296f8c55938/KpvLxvEGVr.json")
+lottie_weather = load_lottie_url("https://lottie.host/c022a6f8-2c28-46cc-9769-27c9c3c8f27c/6woQQX7Bhs.json")
 
 # Page configuration
 st.set_page_config(
@@ -91,36 +91,43 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# Add Font Awesome
+st.markdown("""
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+""", unsafe_allow_html=True)
+
 # Modern mobile-first CSS with enhanced design
 st.markdown("""
 <style>
     /* Global Styling */
     .stApp {
-        background: linear-gradient(135deg, #1a1c2b 0%, #2d3047 100%);
-        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-        color: #ffffff;
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        font-family: 'Plus Jakarta Sans', 'Segoe UI', system-ui, -apple-system, sans-serif;
+        color: #e2e8f0;
     }
 
     /* Typography Improvements */
     h1 {
         color: #ffffff;
-        font-size: 3.2rem;
+        font-size: 3.5rem;
         font-weight: 800;
         margin-bottom: 1.5rem;
-        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         letter-spacing: -0.5px;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        background: linear-gradient(120deg, #00ff87, #60efff);
+        text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        background: linear-gradient(120deg, #38bdf8, #818cf8);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
 
     h2 {
         color: #ffffff;
-        font-size: 2rem;
+        font-size: 2.2rem;
         font-weight: 700;
         margin-bottom: 1rem;
         text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        background: linear-gradient(120deg, #38bdf8, #818cf8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
     }
 
     h3 {
@@ -128,10 +135,12 @@ st.markdown("""
         font-size: 1.5rem;
         font-weight: 600;
         text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        margin-top: 1.5rem;
+        margin-bottom: 1rem;
     }
 
     p {
-        color: #ffffff;
+        color: #e2e8f0;
         line-height: 1.8;
         font-size: 1.1rem;
         font-weight: 400;
@@ -139,59 +148,73 @@ st.markdown("""
 
     /* Modern Card Design */
     .modern-card {
-        background: rgba(255, 255, 255, 0.1);
-        padding: 2rem;
-        border-radius: 20px;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        background: rgba(30, 41, 59, 0.7);
+        padding: 1.5rem;
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
         margin-bottom: 1.5rem;
-        border: 1px solid rgba(255,255,255,0.2);
+        border: 1px solid rgba(148, 163, 184, 0.1);
         backdrop-filter: blur(10px);
         transition: all 0.3s ease;
     }
 
     .modern-card:hover {
         transform: translateY(-4px);
-        box-shadow: 0 12px 40px rgba(0,0,0,0.3);
-        border-color: rgba(255,255,255,0.3);
-        background: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        border-color: rgba(148, 163, 184, 0.2);
+        background: rgba(30, 41, 59, 0.8);
+    }
+
+    /* Dashboard Cards */
+    .dashboard-card {
+        background: rgba(30, 41, 59, 0.7);
+        padding: 1.5rem;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1rem;
+        border: 1px solid rgba(148, 163, 184, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .dashboard-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        border-color: rgba(148, 163, 184, 0.2);
     }
 
     /* Input Fields */
     .stTextInput input, .stSelectbox select, .stTextArea textarea {
         border-radius: 12px;
-        border: 2px solid rgba(255, 255, 255, 0.2);
+        border: 2px solid rgba(148, 163, 184, 0.2);
         padding: 0.75rem 1rem;
         transition: all 0.2s ease;
         font-size: 1rem;
-        color: #ffffff;
-        background: rgba(255, 255, 255, 0.1);
+        color: #e2e8f0;
+        background: rgba(30, 41, 59, 0.7);
     }
 
     .stTextInput input:focus, .stSelectbox select:focus, .stTextArea textarea:focus {
-        border-color: #00ff87;
-        box-shadow: 0 0 0 3px rgba(0, 255, 135, 0.2);
-        background: rgba(255, 255, 255, 0.15);
-    }
-
-    .stTextInput input::placeholder, .stSelectbox select::placeholder, .stTextArea textarea::placeholder {
-        color: rgba(255, 255, 255, 0.6);
+        border-color: #38bdf8;
+        box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+        background: rgba(30, 41, 59, 0.9);
     }
 
     /* Buttons */
     .stButton button {
         border-radius: 12px;
-        padding: 0.6rem 1.5rem;
+        padding: 0.75rem 1.5rem;
         font-weight: 600;
         transition: all 0.2s ease;
-        background: linear-gradient(120deg, #00ff87, #60efff);
-        color: #1a1c2b;
+        background: linear-gradient(135deg, #38bdf8, #818cf8);
+        color: #ffffff;
         border: none;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     }
 
     .stButton button:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 255, 135, 0.3);
-        opacity: 0.9;
+        box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+        opacity: 0.95;
     }
 
     /* Navigation Menu */
@@ -200,103 +223,117 @@ st.markdown("""
         margin: 4px 0 !important;
         padding: 1rem !important;
         transition: all 0.3s ease !important;
-        color: #ffffff !important;
-        background: rgba(255, 255, 255, 0.1) !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        color: #e2e8f0 !important;
+        background: rgba(30, 41, 59, 0.7) !important;
+        border: 1px solid rgba(148, 163, 184, 0.1) !important;
     }
 
     .nav-link:hover {
-        background: rgba(0, 255, 135, 0.2) !important;
+        background: rgba(56, 189, 248, 0.1) !important;
         color: #ffffff !important;
-        border-color: rgba(0, 255, 135, 0.3) !important;
+        border-color: rgba(56, 189, 248, 0.2) !important;
     }
 
     .nav-link.active {
-        background: linear-gradient(120deg, #00ff87, #60efff) !important;
-        color: #1a1c2b !important;
+        background: linear-gradient(135deg, #38bdf8, #818cf8) !important;
+        color: #ffffff !important;
         font-weight: 600 !important;
-        box-shadow: 0 4px 12px rgba(0, 255, 135, 0.3) !important;
-    }
-
-    /* Tables */
-    .dataframe {
-        border-radius: 12px;
-        overflow: hidden;
-        border: none;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        color: #ffffff;
-        background: rgba(255, 255, 255, 0.1);
-    }
-
-    .dataframe th {
-        background: rgba(255, 255, 255, 0.2);
-        padding: 1rem;
-        font-weight: 600;
-        color: #ffffff;
-    }
-
-    .dataframe td {
-        padding: 1rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        color: #ffffff;
+        box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3) !important;
     }
 
     /* Metrics and KPIs */
+    .metric-card {
+        background: rgba(30, 41, 59, 0.7);
+        padding: 1.5rem;
+        border-radius: 16px;
+        border: 1px solid rgba(148, 163, 184, 0.1);
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .metric-card:hover {
+        transform: translateY(-2px);
+        border-color: rgba(56, 189, 248, 0.2);
+        background: rgba(30, 41, 59, 0.8);
+    }
+
     .metric-value {
         font-size: 2.5rem;
         font-weight: 700;
         color: #ffffff;
         text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        background: linear-gradient(120deg, #00ff87, #60efff);
+        background: linear-gradient(135deg, #38bdf8, #818cf8);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+        margin-bottom: 0.5rem;
     }
 
     .metric-label {
         font-size: 1.1rem;
-        color: #ffffff;
-        margin-top: 0.5rem;
+        color: #94a3b8;
         font-weight: 500;
-        text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-    }
-
-    /* Charts and Graphs */
-    .plot-container {
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     }
 
     /* Notifications */
     .notification {
-        background: rgba(255, 255, 255, 0.1);
-        padding: 1rem;
+        background: rgba(30, 41, 59, 0.7);
+        padding: 1rem 1.5rem;
         border-radius: 12px;
-        border-left: 4px solid #00ff87;
+        border-left: 4px solid #38bdf8;
         margin-bottom: 1rem;
         box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+    }
+
+    .notification:hover {
+        transform: translateX(4px);
+        background: rgba(30, 41, 59, 0.8);
+    }
+
+    /* News Cards */
+    .news-card {
+        background: rgba(30, 41, 59, 0.7);
+        padding: 1.5rem;
+        border-radius: 16px;
+        border: 1px solid rgba(148, 163, 184, 0.1);
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .news-card:hover {
+        transform: translateY(-2px);
+        border-color: rgba(56, 189, 248, 0.2);
+        background: rgba(30, 41, 59, 0.8);
+    }
+
+    .news-title {
+        font-size: 1.2rem;
+        font-weight: 600;
         color: #ffffff;
+        margin-bottom: 0.5rem;
     }
 
-    /* Custom scrollbar */
-    ::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
+    .news-meta {
+        font-size: 0.9rem;
+        color: #94a3b8;
+        margin-bottom: 1rem;
     }
 
-    ::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 4px;
+    /* Weather Widget */
+    .weather-widget {
+        background: rgba(30, 41, 59, 0.7);
+        padding: 1.5rem;
+        border-radius: 16px;
+        border: 1px solid rgba(148, 163, 184, 0.1);
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
     }
 
-    ::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 4px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-        background: rgba(255, 255, 255, 0.3);
+    .weather-widget:hover {
+        transform: translateY(-2px);
+        border-color: rgba(56, 189, 248, 0.2);
+        background: rgba(30, 41, 59, 0.8);
     }
 
     /* Hide default elements */
@@ -312,20 +349,24 @@ def main() -> None:
     Manages the main layout, navigation, and different sections of the application.
     """
     try:
-        # Add logo or header
+        # Add logo and header with animation
         with st.container():
-            col1, col2 = st.columns([1, 5])
+            col1, col2, col3 = st.columns([1, 4, 1])
             with col1:
-                if HAS_LOGO_COMPONENT:
-                    try:
-                        add_logo("generated-icon.png", height=80)
-                    except Exception as e:
-                        logger.warning(f"Could not load logo: {e}")
-                        st.markdown("🐔")
+                if lottie_chicken:
+                    st_lottie(lottie_chicken, height=100, key="logo")
                 else:
                     st.markdown("🐔")
             with col2:
-                st.markdown("<h1 style='margin-top: 0.5rem;'>22Poultry</h1>", unsafe_allow_html=True)
+                st.markdown("""
+                    <div style='text-align: center; padding: 1rem 0;'>
+                        <h1 style='margin: 0; font-size: 3.8rem;'>22Poultry</h1>
+                        <p style='color: #94a3b8; margin-top: 0.5rem; font-size: 1.2rem;'>Smart Farming Platform</p>
+                    </div>
+                """, unsafe_allow_html=True)
+            with col3:
+                if lottie_weather:
+                    st_lottie(lottie_weather, height=100, key="weather_anim")
 
         # Initialize session state
         if 'notifications' not in st.session_state:
@@ -334,24 +375,28 @@ def main() -> None:
         # Display any pending notifications
         display_notifications()
         
-        # Navigation menu
+        # Navigation menu with improved styling
         selected = option_menu(
             menu_title=None,
             options=["Dashboard", "Weather", "News", "Collaboration"],
-            icons=["house", "cloud-sun", "newspaper", "people"],
+            icons=["house-fill", "cloud-sun-fill", "newspaper", "people-fill"],
             menu_icon="cast",
             default_index=0,
             orientation="horizontal",
             styles={
-                "container": {"padding": "0!important", "background-color": "transparent"},
-                "icon": {"color": "white", "font-size": "14px"},
+                "container": {"padding": "0.5rem", "background-color": "rgba(30, 41, 59, 0.3)", "border-radius": "12px", "margin": "1rem 0"},
+                "icon": {"color": "#38bdf8", "font-size": "1rem"},
                 "nav-link": {
-                    "text-align": "left",
-                    "margin": "0px",
-                    "padding": "10px",
-                    "--hover-color": "rgba(255, 255, 255, 0.1)",
+                    "text-align": "center",
+                    "margin": "0.2rem",
+                    "padding": "1rem",
+                    "border-radius": "8px",
+                    "--hover-color": "rgba(56, 189, 248, 0.1)",
                 },
-                "nav-link-selected": {"background-color": "rgba(255, 255, 255, 0.2)"},
+                "nav-link-selected": {
+                    "background": "linear-gradient(135deg, #38bdf8, #818cf8)",
+                    "color": "white",
+                },
             }
         )
         
@@ -371,19 +416,98 @@ def main() -> None:
 
 def display_dashboard() -> None:
     """
-    Display the main dashboard with integrated market analysis.
+    Display the main dashboard with integrated market analysis and insights.
     """
     try:
-        st.markdown("## Dashboard Overview")
+        # Dashboard Header with Animation
+        st.markdown("""
+            <div style='display: flex; align-items: center; margin-bottom: 2rem; background: rgba(30, 41, 59, 0.5); padding: 1.5rem; border-radius: 16px; border: 1px solid rgba(148, 163, 184, 0.1);'>
+                <div>
+                    <h1 style='margin: 0; font-size: 2.8rem;'>Dashboard Overview</h1>
+                    <p style='color: #94a3b8; margin-top: 0.5rem;'>Monitor your farm's performance and insights</p>
+                </div>
+                <div style='margin-left: auto; background: rgba(56, 189, 248, 0.1); padding: 0.75rem 1.5rem; border-radius: 12px; border: 1px solid rgba(56, 189, 248, 0.2);'>
+                    <span style='color: #38bdf8; font-size: 1.1rem;'>Last updated: {}</span>
+                </div>
+            </div>
+        """.format(datetime.now().strftime("%B %d, %Y %H:%M")), unsafe_allow_html=True)
         
-        # Weather and Updates Summary
-        col1, col2 = st.columns(2)
+        # Quick Stats Row with Icons
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            st.markdown("""
+                <div class='metric-card'>
+                    <div style='display: flex; align-items: center; margin-bottom: 0.5rem;'>
+                        <i class="fas fa-temperature-high" style='color: #38bdf8; font-size: 1.5rem; margin-right: 0.5rem;'></i>
+                    </div>
+                    <div class='metric-value'>24.5°C</div>
+                    <div class='metric-label'>Average Temperature</div>
+                </div>
+            """, unsafe_allow_html=True)
+        
+        with col2:
+            st.markdown("""
+                <div class='metric-card'>
+                    <div style='display: flex; align-items: center; margin-bottom: 0.5rem;'>
+                        <i class="fas fa-tint" style='color: #38bdf8; font-size: 1.5rem; margin-right: 0.5rem;'></i>
+                    </div>
+                    <div class='metric-value'>78%</div>
+                    <div class='metric-label'>Humidity Level</div>
+                </div>
+            """, unsafe_allow_html=True)
+            
+        with col3:
+            st.markdown("""
+                <div class='metric-card'>
+                    <div style='display: flex; align-items: center; margin-bottom: 0.5rem;'>
+                        <i class="fas fa-check-circle" style='color: #38bdf8; font-size: 1.5rem; margin-right: 0.5rem;'></i>
+                    </div>
+                    <div class='metric-value'>Optimal</div>
+                    <div class='metric-label'>Farm Conditions</div>
+                </div>
+            """, unsafe_allow_html=True)
+            
+        with col4:
+            st.markdown("""
+                <div class='metric-card'>
+                    <div style='display: flex; align-items: center; margin-bottom: 0.5rem;'>
+                        <i class="fas fa-bell" style='color: #38bdf8; font-size: 1.5rem; margin-right: 0.5rem;'></i>
+                    </div>
+                    <div class='metric-value'>3</div>
+                    <div class='metric-label'>Active Alerts</div>
+                </div>
+            """, unsafe_allow_html=True)
+        
+        # Main Content with Enhanced Layout
+        col1, col2 = st.columns([2, 1])
         
         with col1:
-            st.markdown("### Weather Summary")
+            # Weather Forecast with Animation
+            st.markdown("""
+                <div class='dashboard-card'>
+                    <div style='display: flex; align-items: center; margin-bottom: 1rem;'>
+                        <h3 style='margin: 0;'>Weather Forecast</h3>
+                        <div style='margin-left: auto;'>
+                            <i class="fas fa-sync-alt" style='color: #38bdf8; cursor: pointer;'></i>
+                        </div>
+                    </div>
+                    <div class='weather-widget'>
+            """, unsafe_allow_html=True)
             weather.display_weather_widget()
+            st.markdown("</div>", unsafe_allow_html=True)
             
-            st.markdown("### Market Insights")
+            # Market Analysis with Enhanced Visuals
+            st.markdown("""
+                <div class='dashboard-card'>
+                    <div style='display: flex; align-items: center; margin-bottom: 1rem;'>
+                        <h3 style='margin: 0;'>Market Insights</h3>
+                        <div style='margin-left: auto;'>
+                            <i class="fas fa-chart-line" style='color: #38bdf8;'></i>
+                        </div>
+                    </div>
+                    <div style='display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;'>
+            """, unsafe_allow_html=True)
+            
             st.metric(
                 "Market Sentiment",
                 "Positive",
@@ -402,19 +526,60 @@ def display_dashboard() -> None:
                 "3.2%",
                 help="Current demand trend in the market"
             )
-        
-        with col2:
-            st.markdown("### Recent Updates")
+            
+            st.markdown("</div></div>", unsafe_allow_html=True)
+            
+            # Recent Updates with Enhanced Design
+            st.markdown("""
+                <div class='dashboard-card'>
+                    <div style='display: flex; align-items: center; margin-bottom: 1rem;'>
+                        <h3 style='margin: 0;'>Recent Updates</h3>
+                        <div style='margin-left: auto;'>
+                            <i class="fas fa-users" style='color: #38bdf8;'></i>
+                        </div>
+                    </div>
+            """, unsafe_allow_html=True)
             collaboration.init_session_state()
             recent_posts = st.session_state.posts[:3]
             for post in recent_posts:
                 collaboration.show_post(post)
+            st.markdown("</div>", unsafe_allow_html=True)
+        
+        with col2:
+            # Active Alerts with Enhanced Styling
+            st.markdown("""
+                <div style='background: rgba(30, 41, 59, 0.5); padding: 1.5rem; border-radius: 16px; margin-bottom: 1.5rem;'>
+                    <div style='display: flex; align-items: center; margin-bottom: 1rem;'>
+                        <h3 style='margin: 0;'>Active Alerts</h3>
+                        <div style='margin-left: auto;'>
+                            <i class="fas fa-bell" style='color: #38bdf8;'></i>
+                        </div>
+                    </div>
+            """, unsafe_allow_html=True)
+            if st.session_state.notifications:
+                for notification in st.session_state.notifications:
+                    st.markdown(f"""
+                        <div class="notification">
+                            <strong>{notification['title']}</strong><br>
+                            <p style='margin: 0.5rem 0 0 0; color: #94a3b8;'>{notification['message']}</p>
+                        </div>
+                    """, unsafe_allow_html=True)
+            else:
+                st.info("No new notifications")
+            st.markdown("</div>", unsafe_allow_html=True)
             
-            st.markdown("### Latest News")
+            # Latest News with Enhanced Design
+            st.markdown("""
+                <div style='background: rgba(30, 41, 59, 0.5); padding: 1.5rem; border-radius: 16px;'>
+                    <div style='display: flex; align-items: center; margin-bottom: 1rem;'>
+                        <h3 style='margin: 0;'>Latest News</h3>
+                        <div style='margin-left: auto;'>
+                            <i class="fas fa-newspaper" style='color: #38bdf8;'></i>
+                        </div>
+                    </div>
+            """, unsafe_allow_html=True)
             news.show_news_summary()
-            
-        # Display notifications
-        display_notifications()
+            st.markdown("</div>", unsafe_allow_html=True)
             
     except Exception as e:
         logger.error(f"Error in dashboard display: {str(e)}")
