@@ -156,37 +156,25 @@ st.markdown("""
         background: rgba(255, 255, 255, 0.15);
     }
 
-    /* Dashboard Stats Cards */
-    .stat-card {
-        background: rgba(255, 255, 255, 0.1);
-        padding: 1.5rem;
-        border-radius: 20px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        text-align: center;
-        transition: transform 0.3s ease;
-        border: 1px solid rgba(255,255,255,0.2);
-    }
-
-    .stat-card:hover {
-        transform: translateY(-2px);
-        border-color: rgba(255,255,255,0.3);
-        background: rgba(255, 255, 255, 0.15);
-    }
-
     /* Input Fields */
-    .stTextInput input, .stSelectbox select {
+    .stTextInput input, .stSelectbox select, .stTextArea textarea {
         border-radius: 12px;
-        border: 2px solid rgba(37, 99, 235, 0.2);
+        border: 2px solid rgba(255, 255, 255, 0.2);
         padding: 0.75rem 1rem;
         transition: all 0.2s ease;
         font-size: 1rem;
-        color: #1e293b;
-        background: white;
+        color: #ffffff;
+        background: rgba(255, 255, 255, 0.1);
     }
 
-    .stTextInput input:focus, .stSelectbox select:focus {
-        border-color: #2563eb;
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+    .stTextInput input:focus, .stSelectbox select:focus, .stTextArea textarea:focus {
+        border-color: #00ff87;
+        box-shadow: 0 0 0 3px rgba(0, 255, 135, 0.2);
+        background: rgba(255, 255, 255, 0.15);
+    }
+
+    .stTextInput input::placeholder, .stSelectbox select::placeholder, .stTextArea textarea::placeholder {
+        color: rgba(255, 255, 255, 0.6);
     }
 
     /* Buttons */
@@ -195,15 +183,15 @@ st.markdown("""
         padding: 0.6rem 1.5rem;
         font-weight: 600;
         transition: all 0.2s ease;
-        background: #2563eb;
-        color: white;
+        background: linear-gradient(120deg, #00ff87, #60efff);
+        color: #1a1c2b;
         border: none;
     }
 
     .stButton button:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
-        background: #1d4ed8;
+        box-shadow: 0 4px 12px rgba(0, 255, 135, 0.3);
+        opacity: 0.9;
     }
 
     /* Navigation Menu */
@@ -230,6 +218,29 @@ st.markdown("""
         box-shadow: 0 4px 12px rgba(0, 255, 135, 0.3) !important;
     }
 
+    /* Tables */
+    .dataframe {
+        border-radius: 12px;
+        overflow: hidden;
+        border: none;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        color: #ffffff;
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .dataframe th {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 1rem;
+        font-weight: 600;
+        color: #ffffff;
+    }
+
+    .dataframe td {
+        padding: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        color: #ffffff;
+    }
+
     /* Metrics and KPIs */
     .metric-value {
         font-size: 2.5rem;
@@ -254,27 +265,6 @@ st.markdown("""
         border-radius: 16px;
         overflow: hidden;
         box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    }
-
-    /* Tables */
-    .dataframe {
-        border-radius: 12px;
-        overflow: hidden;
-        border: none;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    }
-
-    .dataframe th {
-        background: #f1f5f9;
-        padding: 1rem;
-        font-weight: 600;
-        color: #334155;
-    }
-
-    .dataframe td {
-        padding: 1rem;
-        border-bottom: 1px solid #e2e8f0;
-        color: #475569;
     }
 
     /* Notifications */
