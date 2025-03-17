@@ -85,7 +85,7 @@ lottie_weather = load_lottie_url("https://assets5.lottiefiles.com/packages/lf20_
 
 # Page configuration
 st.set_page_config(
-    page_title="PoultryInnovate | Smart Farming Platform",
+    page_title="22Poultry | Smart Farming Platform",
     page_icon="🐔",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -96,73 +96,77 @@ st.markdown("""
 <style>
     /* Global Styling */
     .stApp {
-        background: linear-gradient(135deg, #ffffff 0%, #f5f7fa 100%);
+        background: linear-gradient(135deg, #1a1c2b 0%, #2d3047 100%);
         font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    }
-
-    .css-1d391kg {
-        padding-top: 1rem;
+        color: #ffffff;
     }
 
     /* Typography Improvements */
     h1 {
-        color: #1e293b;
-        font-size: 2.5rem;
-        font-weight: 700;
+        color: #ffffff;
+        font-size: 3rem;
+        font-weight: 800;
         margin-bottom: 1.5rem;
         font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         letter-spacing: -0.5px;
-        text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        background: linear-gradient(120deg, #4a90e2, #67b26f);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
     }
 
     h2 {
-        color: #334155;
-        font-size: 1.8rem;
-        font-weight: 600;
+        color: #e2e8f0;
+        font-size: 2rem;
+        font-weight: 700;
         margin-bottom: 1rem;
     }
 
     h3 {
-        color: #475569;
-        font-size: 1.4rem;
-        font-weight: 500;
+        color: #cbd5e1;
+        font-size: 1.5rem;
+        font-weight: 600;
     }
 
     p {
-        color: #334155;
-        line-height: 1.7;
+        color: #e2e8f0;
+        line-height: 1.8;
         font-size: 1.1rem;
         font-weight: 400;
     }
 
     /* Modern Card Design */
     .modern-card {
-        background: white;
+        background: rgba(255, 255, 255, 0.05);
         padding: 2rem;
-        border-radius: 16px;
-        box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.1);
         margin-bottom: 1.5rem;
-        border: 1px solid rgba(0,0,0,0.06);
+        border: 1px solid rgba(255,255,255,0.1);
+        backdrop-filter: blur(10px);
         transition: all 0.3s ease;
     }
 
     .modern-card:hover {
         transform: translateY(-4px);
-        box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+        border-color: rgba(255,255,255,0.2);
     }
 
     /* Dashboard Stats Cards */
     .stat-card {
-        background: white;
+        background: rgba(255, 255, 255, 0.05);
         padding: 1.5rem;
-        border-radius: 16px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        border-radius: 20px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         text-align: center;
-        transition: transform 0.2s ease;
+        transition: transform 0.3s ease;
+        border: 1px solid rgba(255,255,255,0.1);
     }
 
     .stat-card:hover {
         transform: translateY(-2px);
+        border-color: rgba(255,255,255,0.2);
     }
 
     /* Input Fields */
@@ -202,33 +206,37 @@ st.markdown("""
     .nav-link {
         border-radius: 12px !important;
         margin: 4px 0 !important;
-        padding: 0.8rem !important;
-        transition: all 0.2s ease !important;
-        color: #475569 !important;
+        padding: 1rem !important;
+        transition: all 0.3s ease !important;
+        color: #cbd5e1 !important;
+        background: rgba(255, 255, 255, 0.05) !important;
     }
 
     .nav-link:hover {
-        background-color: rgba(37, 99, 235, 0.1) !important;
-        color: #2563eb !important;
+        background: rgba(74, 144, 226, 0.2) !important;
+        color: #ffffff !important;
     }
 
     .nav-link.active {
-        background-color: #2563eb !important;
+        background: linear-gradient(120deg, #4a90e2, #67b26f) !important;
         color: white !important;
-        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2) !important;
+        box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3) !important;
     }
 
     /* Metrics and KPIs */
     .metric-value {
         font-size: 2.5rem;
         font-weight: 700;
-        color: #2563eb;
-        text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        color: #4a90e2;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        background: linear-gradient(120deg, #4a90e2, #67b26f);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
     }
 
     .metric-label {
-        font-size: 1rem;
-        color: #475569;
+        font-size: 1.1rem;
+        color: #cbd5e1;
         margin-top: 0.5rem;
         font-weight: 500;
     }
@@ -263,12 +271,13 @@ st.markdown("""
 
     /* Notifications */
     .notification {
-        background: white;
+        background: rgba(255, 255, 255, 0.05);
         padding: 1rem;
         border-radius: 12px;
-        border-left: 4px solid #2563eb;
-        margin-bottom: 0.8rem;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        border-left: 4px solid #4a90e2;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        backdrop-filter: blur(10px);
     }
 
     /* Custom scrollbar */
@@ -278,17 +287,17 @@ st.markdown("""
     }
 
     ::-webkit-scrollbar-track {
-        background: #f1f5f9;
+        background: rgba(255, 255, 255, 0.05);
         border-radius: 4px;
     }
 
     ::-webkit-scrollbar-thumb {
-        background: #94a3b8;
+        background: rgba(255, 255, 255, 0.2);
         border-radius: 4px;
     }
 
     ::-webkit-scrollbar-thumb:hover {
-        background: #64748b;
+        background: rgba(255, 255, 255, 0.3);
     }
 
     /* Hide default elements */
@@ -485,7 +494,7 @@ def display_notifications() -> None:
 if __name__ == "__main__":
     try:
         # Add a health check endpoint
-        if st.experimental_get_query_params().get("healthz"):
+        if "healthz" in st.query_params:
             st.success("Health check passed")
         else:
             main()
