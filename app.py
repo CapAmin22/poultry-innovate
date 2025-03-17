@@ -104,32 +104,34 @@ st.markdown("""
     /* Typography Improvements */
     h1 {
         color: #ffffff;
-        font-size: 3rem;
+        font-size: 3.2rem;
         font-weight: 800;
         margin-bottom: 1.5rem;
         font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         letter-spacing: -0.5px;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        background: linear-gradient(120deg, #4a90e2, #67b26f);
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        background: linear-gradient(120deg, #00ff87, #60efff);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
 
     h2 {
-        color: #e2e8f0;
+        color: #ffffff;
         font-size: 2rem;
         font-weight: 700;
         margin-bottom: 1rem;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
 
     h3 {
-        color: #cbd5e1;
+        color: #ffffff;
         font-size: 1.5rem;
         font-weight: 600;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.2);
     }
 
     p {
-        color: #e2e8f0;
+        color: #ffffff;
         line-height: 1.8;
         font-size: 1.1rem;
         font-weight: 400;
@@ -137,36 +139,38 @@ st.markdown("""
 
     /* Modern Card Design */
     .modern-card {
-        background: rgba(255, 255, 255, 0.05);
+        background: rgba(255, 255, 255, 0.1);
         padding: 2rem;
         border-radius: 20px;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.2);
         margin-bottom: 1.5rem;
-        border: 1px solid rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.2);
         backdrop-filter: blur(10px);
         transition: all 0.3s ease;
     }
 
     .modern-card:hover {
         transform: translateY(-4px);
-        box-shadow: 0 12px 40px rgba(0,0,0,0.2);
-        border-color: rgba(255,255,255,0.2);
+        box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+        border-color: rgba(255,255,255,0.3);
+        background: rgba(255, 255, 255, 0.15);
     }
 
     /* Dashboard Stats Cards */
     .stat-card {
-        background: rgba(255, 255, 255, 0.05);
+        background: rgba(255, 255, 255, 0.1);
         padding: 1.5rem;
         border-radius: 20px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         text-align: center;
         transition: transform 0.3s ease;
-        border: 1px solid rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.2);
     }
 
     .stat-card:hover {
         transform: translateY(-2px);
-        border-color: rgba(255,255,255,0.2);
+        border-color: rgba(255,255,255,0.3);
+        background: rgba(255, 255, 255, 0.15);
     }
 
     /* Input Fields */
@@ -208,37 +212,41 @@ st.markdown("""
         margin: 4px 0 !important;
         padding: 1rem !important;
         transition: all 0.3s ease !important;
-        color: #cbd5e1 !important;
-        background: rgba(255, 255, 255, 0.05) !important;
+        color: #ffffff !important;
+        background: rgba(255, 255, 255, 0.1) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
     }
 
     .nav-link:hover {
-        background: rgba(74, 144, 226, 0.2) !important;
+        background: rgba(0, 255, 135, 0.2) !important;
         color: #ffffff !important;
+        border-color: rgba(0, 255, 135, 0.3) !important;
     }
 
     .nav-link.active {
-        background: linear-gradient(120deg, #4a90e2, #67b26f) !important;
-        color: white !important;
-        box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3) !important;
+        background: linear-gradient(120deg, #00ff87, #60efff) !important;
+        color: #1a1c2b !important;
+        font-weight: 600 !important;
+        box-shadow: 0 4px 12px rgba(0, 255, 135, 0.3) !important;
     }
 
     /* Metrics and KPIs */
     .metric-value {
         font-size: 2.5rem;
         font-weight: 700;
-        color: #4a90e2;
+        color: #ffffff;
         text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        background: linear-gradient(120deg, #4a90e2, #67b26f);
+        background: linear-gradient(120deg, #00ff87, #60efff);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
 
     .metric-label {
         font-size: 1.1rem;
-        color: #cbd5e1;
+        color: #ffffff;
         margin-top: 0.5rem;
         font-weight: 500;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.2);
     }
 
     /* Charts and Graphs */
@@ -271,13 +279,14 @@ st.markdown("""
 
     /* Notifications */
     .notification {
-        background: rgba(255, 255, 255, 0.05);
+        background: rgba(255, 255, 255, 0.1);
         padding: 1rem;
         border-radius: 12px;
-        border-left: 4px solid #4a90e2;
+        border-left: 4px solid #00ff87;
         margin-bottom: 1rem;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         backdrop-filter: blur(10px);
+        color: #ffffff;
     }
 
     /* Custom scrollbar */
@@ -326,7 +335,7 @@ def main() -> None:
                 else:
                     st.markdown("🐔")
             with col2:
-                st.markdown("<h1 style='margin-top: 0.5rem;'>PoultryInnovate</h1>", unsafe_allow_html=True)
+                st.markdown("<h1 style='margin-top: 0.5rem;'>22Poultry</h1>", unsafe_allow_html=True)
 
         # Initialize session state
         if 'user_location' not in st.session_state:

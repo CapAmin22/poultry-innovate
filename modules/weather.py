@@ -14,26 +14,67 @@ def kelvin_to_celsius(kelvin):
 def get_weather_icon(icon_code):
     return f"https://openweathermap.org/img/wn/{icon_code}@2x.png"
 
-def get_weather_data(city, country='IN'):
-    """
-    Fetch weather data from OpenWeather API
-    """
+def get_weather_data(lat: float = 0, lon: float = 0) -> dict:
+    """Fetch weather data from OpenWeather API with error handling."""
     try:
         api_key = st.secrets["openweather_api_key"]
-        base_url = st.secrets.get("api_urls", {}).get("weather", "https://api.openweathermap.org/data/2.5")
+        url = f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={api_key}&units=metric"
         
-        params = {
-            'q': f'{city},{country}',
-            'appid': api_key,
-            'units': 'metric'
-        }
-        
-        response = requests.get(f'{base_url}/forecast', params=params)
+        response = requests.get(url, timeout=10)
         response.raise_for_status()
         return response.json()
+    except KeyError:
+        logger.error("OpenWeather API key not found in secrets")
+        return {"error": "API key not configured"}
+    except requests.RequestException as e:
+        logger.error(f"Weather API request failed: {str(e)}")
+        return {"error": "Weather service temporarily unavailable"}
+
+def display_weather_widget():
+    """Display weather information with error handling."""
+    try:
+        # Default coordinates (can be updated based on user location)
+        weather_data = get_weather_data(14.5995, 120.9842)  # Manila coordinates
+        
+        if "error" in weather_data:
+            st.warning(weather_data["error"])
+            return
+            
+        temp = weather_data.get("main", {}).get("temp", "N/A")
+        humidity = weather_data.get("main", {}).get("humidity", "N/A")
+        description = weather_data.get("weather", [{}])[0].get("description", "N/A").capitalize()
+        
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.metric("Temperature", f"{temp}°C")
+        with col2:
+            st.metric("Humidity", f"{humidity}%")
+        with col3:
+            st.metric("Conditions", description)
+            
     except Exception as e:
-        logger.error(f"Error fetching weather data: {e}")
-        return None
+        logger.error(f"Error displaying weather widget: {str(e)}")
+        st.warning("Weather information temporarily unavailable")
+
+def show_weather_module():
+    """Main weather module display."""
+    st.markdown("## Weather Monitoring")
+    
+    try:
+        # Location selector (can be enhanced with geocoding)
+        st.selectbox("Select Location", ["Manila", "Cebu", "Davao"], key="weather_location")
+        
+        # Current conditions
+        st.markdown("### Current Conditions")
+        display_weather_widget()
+        
+        # Forecast section
+        st.markdown("### 5-Day Forecast")
+        st.info("Forecast feature coming soon!")
+        
+    except Exception as e:
+        logger.error(f"Error in weather module: {str(e)}")
+        st.error("Unable to load weather module. Please try again later.")
 
 def show_forecast(location=None):
     if not location:
