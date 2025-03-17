@@ -1,5 +1,5 @@
 import streamlit as st
-from modules import weather, news, statistics, education, financial, stakeholders, health, collaboration
+from modules import weather, news, collaboration
 import os
 from streamlit_option_menu import option_menu
 from streamlit_extras.app_logo import add_logo
@@ -376,62 +376,42 @@ def display_dashboard() -> None:
     try:
         st.markdown("## Dashboard Overview")
         
-        # Weather and Market Summary
+        # Weather and Updates Summary
         col1, col2 = st.columns(2)
         
         with col1:
             st.markdown("### Weather Summary")
             weather.display_weather_widget()
             
-            st.markdown("### Recent Updates")
-            collaboration.init_session_state()
-            recent_posts = st.session_state.posts[:2]
-            for post in recent_posts:
-                collaboration.show_post(post)
-        
-        with col2:
-            st.markdown("### Market Overview")
-            financial.display_market_summary()
-            
-            # Market Trends Section
-            st.markdown("### Market Analysis")
-            
-            # Create tabs for market analysis
-            market_tab1, market_tab2 = st.tabs(["Commodity Prices", "Poultry Prices"])
-            
-            with market_tab1:
-                financial.show_commodity_prices()
-            
-            with market_tab2:
-                financial.show_poultry_prices()
-        
-        # Bottom section for additional insights
-        st.markdown("### Market Insights & Trends")
-        col3, col4, col5 = st.columns(3)
-        
-        with col3:
+            st.markdown("### Market Insights")
             st.metric(
                 "Market Sentiment",
                 "Positive",
                 "2.1%",
                 help="Overall market sentiment based on recent trends"
             )
-            
-        with col4:
             st.metric(
                 "Supply Status",
                 "Stable",
                 "0.5%",
                 help="Current supply chain status"
             )
-            
-        with col5:
             st.metric(
                 "Demand Trend",
                 "Growing",
                 "3.2%",
                 help="Current demand trend in the market"
             )
+        
+        with col2:
+            st.markdown("### Recent Updates")
+            collaboration.init_session_state()
+            recent_posts = st.session_state.posts[:3]
+            for post in recent_posts:
+                collaboration.show_post(post)
+            
+            st.markdown("### Latest News")
+            news.show_news_summary()
             
         # Display notifications
         display_notifications()
