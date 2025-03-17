@@ -1,8 +1,246 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
 from datetime import datetime, timedelta
+import logging
 from .api_config import api_client
+
+logger = logging.getLogger(__name__)
+
+def get_health_data():
+    """Get health monitoring data with fallback to dummy data."""
+    try:
+        # Dummy health data for demonstration
+        return {
+            'mortality_rate': 2.5,
+            'feed_consumption': 85.3,
+            'water_consumption': 92.1,
+            'temperature': 25.6,
+            'humidity': 65.2,
+            'ammonia_levels': 15.4,
+            'last_vaccination': '2024-03-10',
+            'next_vaccination': '2024-04-10'
+        }
+    except Exception as e:
+        logger.error(f"Error getting health data: {e}")
+        return None
+
+def display_health_summary():
+    """Display key health metrics in the dashboard."""
+    try:
+        health_data = get_health_data()
+        if not health_data:
+            st.warning("Health data temporarily unavailable")
+            return
+
+        # Create metrics display
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            st.metric(
+                "Mortality Rate",
+                f"{health_data['mortality_rate']}%",
+                "-0.5%"
+            )
+        
+        with col2:
+            st.metric(
+                "Feed Consumption",
+                f"{health_data['feed_consumption']}%",
+                "2.1%"
+            )
+        
+        with col3:
+            st.metric(
+                "Water Consumption",
+                f"{health_data['water_consumption']}%",
+                "1.8%"
+            )
+    except Exception as e:
+        logger.error(f"Error displaying health summary: {e}")
+        st.warning("Unable to display health summary")
+
+def show_health_module():
+    """Display the health monitoring module."""
+    try:
+        st.markdown("## Health Monitoring")
+        
+        # Create tabs for different health aspects
+        tab1, tab2, tab3 = st.tabs([
+            "Environmental Conditions",
+            "Health Metrics",
+            "Vaccination Schedule"
+        ])
+        
+        with tab1:
+            show_environmental_conditions()
+        
+        with tab2:
+            show_health_metrics()
+        
+        with tab3:
+            show_vaccination_schedule()
+            
+    except Exception as e:
+        logger.error(f"Error in health module: {e}")
+        st.error("An error occurred while loading the health module")
+        st.markdown("### Basic Health Information")
+        display_health_summary()
+
+def show_environmental_conditions():
+    """Display environmental conditions monitoring."""
+    try:
+        health_data = get_health_data()
+        if not health_data:
+            st.warning("Environmental data temporarily unavailable")
+            return
+            
+        st.markdown("### Environmental Conditions")
+        
+        # Create metrics
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            st.metric(
+                "Temperature",
+                f"{health_data['temperature']}°C",
+                "0.8°C"
+            )
+        
+        with col2:
+            st.metric(
+                "Humidity",
+                f"{health_data['humidity']}%",
+                "-2.3%"
+            )
+        
+        with col3:
+            st.metric(
+                "Ammonia Levels",
+                f"{health_data['ammonia_levels']} ppm",
+                "-1.2 ppm"
+            )
+            
+        # Add a line chart for temperature trends
+        dates = pd.date_range(start='2024-03-01', end='2024-03-17', freq='D')
+        temp_data = pd.DataFrame({
+            'Date': dates,
+            'Temperature': [25 + i * 0.1 for i in range(len(dates))]
+        })
+        
+        fig = px.line(temp_data, x='Date', y='Temperature',
+                     title='Temperature Trend')
+        st.plotly_chart(fig, use_container_width=True)
+        
+    except Exception as e:
+        logger.error(f"Error showing environmental conditions: {e}")
+        st.warning("Unable to display environmental conditions")
+
+def show_health_metrics():
+    """Display health metrics and statistics."""
+    try:
+        health_data = get_health_data()
+        if not health_data:
+            st.warning("Health metrics temporarily unavailable")
+            return
+            
+        st.markdown("### Health Metrics")
+        
+        # Create a sample dataset for demonstration
+        dates = pd.date_range(start='2024-03-01', end='2024-03-17', freq='D')
+        metrics_data = pd.DataFrame({
+            'Date': dates,
+            'Mortality Rate': [2.5 - i * 0.1 for i in range(len(dates))],
+            'Feed Consumption': [85 + i * 0.2 for i in range(len(dates))],
+            'Water Consumption': [90 + i * 0.15 for i in range(len(dates))]
+        })
+        
+        # Create multi-line chart
+        fig = go.Figure()
+        
+        fig.add_trace(go.Scatter(
+            x=metrics_data['Date'],
+            y=metrics_data['Mortality Rate'],
+            name='Mortality Rate',
+            line=dict(color='#ef4444')
+        ))
+        
+        fig.add_trace(go.Scatter(
+            x=metrics_data['Date'],
+            y=metrics_data['Feed Consumption'],
+            name='Feed Consumption',
+            line=dict(color='#3b82f6')
+        ))
+        
+        fig.add_trace(go.Scatter(
+            x=metrics_data['Date'],
+            y=metrics_data['Water Consumption'],
+            name='Water Consumption',
+            line=dict(color='#10b981')
+        ))
+        
+        fig.update_layout(
+            title='Health Metrics Trends',
+            xaxis_title='Date',
+            yaxis_title='Value',
+            hovermode='x unified'
+        )
+        
+        st.plotly_chart(fig, use_container_width=True)
+        
+    except Exception as e:
+        logger.error(f"Error showing health metrics: {e}")
+        st.warning("Unable to display health metrics")
+
+def show_vaccination_schedule():
+    """Display vaccination schedule and records."""
+    try:
+        health_data = get_health_data()
+        if not health_data:
+            st.warning("Vaccination data temporarily unavailable")
+            return
+            
+        st.markdown("### Vaccination Schedule")
+        
+        # Display vaccination information
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown("#### Last Vaccination")
+            st.markdown(f"**Date:** {health_data['last_vaccination']}")
+            st.markdown("**Type:** Regular Health Check")
+            st.markdown("**Status:** Completed ✅")
+        
+        with col2:
+            st.markdown("#### Next Vaccination")
+            st.markdown(f"**Date:** {health_data['next_vaccination']}")
+            st.markdown("**Type:** Preventive Care")
+            st.markdown("**Status:** Scheduled 📅")
+        
+        # Add a timeline or calendar view
+        st.markdown("#### Vaccination Timeline")
+        
+        # Sample vaccination schedule
+        schedule = pd.DataFrame({
+            'Date': ['2024-03-10', '2024-04-10', '2024-05-10', '2024-06-10'],
+            'Type': ['Health Check', 'Preventive', 'Booster', 'Regular'],
+            'Status': ['Completed', 'Scheduled', 'Planned', 'Planned']
+        })
+        
+        st.dataframe(
+            schedule,
+            column_config={
+                "Date": "Date",
+                "Type": "Vaccination Type",
+                "Status": "Status"
+            },
+            hide_index=True
+        )
+        
+    except Exception as e:
+        logger.error(f"Error showing vaccination schedule: {e}")
+        st.warning("Unable to display vaccination schedule")
 
 def get_disease_data(region='all'):
     """Get disease tracking data for poultry"""
