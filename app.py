@@ -340,125 +340,119 @@ def main() -> None:
         # Initialize session state
         if 'user_location' not in st.session_state:
             st.session_state.user_location = None
-            logger.info("Initialized user_location in session state")
         if 'notifications' not in st.session_state:
             st.session_state.notifications = []
-            logger.info("Initialized notifications in session state")
 
         # Main navigation
-        try:
-            selected = option_menu(
-                menu_title=None,
-                options=["Dashboard", "Weather", "Market", "Education", "Collaboration", "News"],
-                icons=["speedometer2", "cloud-sun", "currency-dollar", "book", "people", "newspaper"],
-                default_index=0,
-                orientation="horizontal",
-                styles={
-                    "container": {"padding": "0!important", "background-color": "transparent"},
-                    "icon": {"font-size": "1rem"}, 
-                    "nav-link": {
-                        "font-size": "0.9rem",
-                        "text-align": "center",
-                        "margin": "0px",
-                        "--hover-color": "rgba(0, 255, 135, 0.2)",
-                    },
-                    "nav-link-selected": {
-                        "background": "linear-gradient(120deg, #00ff87, #60efff)",
-                        "color": "#1a1c2b",
-                        "font-weight": "600",
-                    },
-                }
-            )
-        except Exception as e:
-            logger.error(f"Error in navigation menu: {e}")
-            selected = "Dashboard"  # Fallback to dashboard
+        selected = option_menu(
+            menu_title=None,
+            options=["Dashboard", "Weather", "Education", "Collaboration", "News"],
+            icons=["speedometer2", "cloud-sun", "book", "people", "newspaper"],
+            default_index=0,
+            orientation="horizontal",
+            styles={
+                "container": {"padding": "0!important", "background-color": "transparent"},
+                "icon": {"font-size": "1rem"}, 
+                "nav-link": {
+                    "font-size": "0.9rem",
+                    "text-align": "center",
+                    "margin": "0px",
+                    "--hover-color": "rgba(0, 255, 135, 0.2)",
+                },
+                "nav-link-selected": {
+                    "background": "linear-gradient(120deg, #00ff87, #60efff)",
+                    "color": "#1a1c2b",
+                    "font-weight": "600",
+                },
+            }
+        )
 
-        # Handle navigation selection with error handling for each module
-        try:
-            if selected == "Dashboard":
-                display_dashboard()
-            elif selected == "Weather":
-                weather.show_weather_module()
-            elif selected == "Market":
-                financial.show_market_module()
-            elif selected == "Education":
-                education.show_education_module()
-            elif selected == "Collaboration":
-                collaboration.show_collaboration_module()
-            elif selected == "News":
-                news.show_news_module()
-        except Exception as e:
-            logger.error(f"Error in module {selected}: {str(e)}")
-            st.error(f"An error occurred while loading the {selected} module. Please try again later.")
-            # Display a basic fallback UI
-            st.markdown("### Module Temporarily Unavailable")
-            st.markdown("We're experiencing technical difficulties. Please try:")
-            st.markdown("1. Refreshing the page")
-            st.markdown("2. Selecting a different module")
-            st.markdown("3. Checking back later")
+        # Handle navigation selection
+        if selected == "Dashboard":
+            display_dashboard()
+        elif selected == "Weather":
+            weather.show_weather_module()
+        elif selected == "Education":
+            education.show_education_module()
+        elif selected == "Collaboration":
+            collaboration.show_collaboration_module()
+        elif selected == "News":
+            news.show_news_module()
 
     except Exception as e:
         logger.error(f"Critical error in main application: {str(e)}")
         st.error("An unexpected error occurred. Please refresh the page or contact support.")
-        # Provide basic functionality even in case of errors
-        st.markdown("### Emergency Mode")
-        st.markdown("The application is running in a reduced functionality mode.")
 
 def display_dashboard() -> None:
     """
-    Display the main dashboard with key metrics and overview information.
-    Includes weather summary, health alerts, market trends, and recent news.
+    Display the main dashboard with integrated market analysis.
     """
     try:
         st.markdown("## Dashboard Overview")
         
-        # Create dashboard layout with error handling for each section
-        col1, col2, col3 = st.columns(3)
+        # Weather and Market Summary
+        col1, col2 = st.columns(2)
         
         with col1:
-            try:
-                display_weather_summary()
-            except Exception as e:
-                logger.error(f"Error in weather summary: {e}")
-                st.warning("Weather information temporarily unavailable")
+            st.markdown("### Weather Summary")
+            weather.display_weather_widget()
+            
+            st.markdown("### Recent Updates")
+            collaboration.init_session_state()
+            recent_posts = st.session_state.posts[:2]
+            for post in recent_posts:
+                collaboration.show_post(post)
         
         with col2:
-            try:
-                display_market_trends()
-            except Exception as e:
-                logger.error(f"Error in market trends: {e}")
-                st.warning("Market trends temporarily unavailable")
+            st.markdown("### Market Overview")
+            financial.display_market_summary()
+            
+            # Market Trends Section
+            st.markdown("### Market Analysis")
+            
+            # Create tabs for market analysis
+            market_tab1, market_tab2 = st.tabs(["Commodity Prices", "Poultry Prices"])
+            
+            with market_tab1:
+                financial.show_commodity_prices()
+            
+            with market_tab2:
+                financial.show_poultry_prices()
         
-        # Display notifications with error handling
-        try:
-            display_notifications()
-        except Exception as e:
-            logger.error(f"Error displaying notifications: {e}")
-            st.warning("Notifications temporarily unavailable")
+        # Bottom section for additional insights
+        st.markdown("### Market Insights & Trends")
+        col3, col4, col5 = st.columns(3)
+        
+        with col3:
+            st.metric(
+                "Market Sentiment",
+                "Positive",
+                "2.1%",
+                help="Overall market sentiment based on recent trends"
+            )
+            
+        with col4:
+            st.metric(
+                "Supply Status",
+                "Stable",
+                "0.5%",
+                help="Current supply chain status"
+            )
+            
+        with col5:
+            st.metric(
+                "Demand Trend",
+                "Growing",
+                "3.2%",
+                help="Current demand trend in the market"
+            )
+            
+        # Display notifications
+        display_notifications()
             
     except Exception as e:
         logger.error(f"Error in dashboard display: {str(e)}")
         st.error("Unable to load dashboard components. Please refresh the page.")
-
-def display_weather_summary() -> None:
-    """Display a summary of current weather conditions and forecasts."""
-    try:
-        with st.container():
-            st.markdown("### Weather Summary")
-            weather.display_weather_widget()
-    except Exception as e:
-        logger.error(f"Error displaying weather summary: {str(e)}")
-        st.warning("Weather information temporarily unavailable")
-
-def display_market_trends() -> None:
-    """Display current market trends and financial indicators."""
-    try:
-        with st.container():
-            st.markdown("### Market Trends")
-            financial.display_market_summary()
-    except Exception as e:
-        logger.error(f"Error displaying market trends: {str(e)}")
-        st.warning("Market trends temporarily unavailable")
 
 def display_notifications() -> None:
     """Display recent notifications and alerts in the dashboard."""
